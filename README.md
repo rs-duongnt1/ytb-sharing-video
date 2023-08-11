@@ -17,6 +17,7 @@ Websocket: ws://websocket.rsdn.site/ws
 - User registration and login
 - Sharing YouTube videos
 - Viewing a list of shared videos realtime
+- Real-time notifications for new video shares
 
 ## Prerequisites
 
