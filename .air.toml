@@ -1,0 +1,5 @@
+[build]
+root = "."
+cmd = "go build -o ./tmp/main cmd/main.go"
+include_dir = ["internal", "pkg", "cmd"]
+full_bin = "go run cmd/main.go"

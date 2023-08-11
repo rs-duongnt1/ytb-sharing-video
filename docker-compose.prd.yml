@@ -1,0 +1,70 @@
+version: "3.7"
+
+services:
+  traefik:
+    image: "traefik:v2.10"
+    command:
+      - "--log.level=DEBUG"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      # - "--entrypoints.web.http.redirections.entrypoint.to=websecure"
+      # - "--entrypoints.web.http.redirections.entrypoint.scheme=https"
+      # - "--entrypoints.websecure.address=:443"
+      - "traefik.http.routers.api.rule=Host(`traefik.${DOMAIN_NAME}`)"
+      - "--certificatesresolvers.myresolver.acme.tlschallenge=true"
+      - "--certificatesresolvers.myresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.myresolver.acme.email=thanhduongbkdn2015@gmail.com"
+      - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      # - "443:443"
+      - "8080:8080"
+    volumes:
+      # - "letsencrypt:/letsencrypt"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+  web:
+    image: ${APP_REGISTRY_IMAGE}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.app.loadbalancer.server.port=3000"
+      - "traefik.http.routers.app.rule=Host(`${DOMAIN_NAME}`)"
+      # - "traefik.http.routers.app.entrypoints=websecure"
+      # - "traefik.http.routers.app.tls.certresolver=myresolver"
+  api:
+    image: ${API_REGISTRY_IMAGE}
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.services.http-service.loadbalancer.server.port=8090"
+      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_NAME}`)"
+      # - "traefik.http.routers.api.entrypoints=websecure"
+      # - "traefik.http.routers.api.tls.certresolver=myresolver"
+      - "traefik.http.routers.api.service=http-service"
+
+      - "traefik.http.services.websocket-service.loadbalancer.server.port=8000"
+      - "traefik.http.routers.websocket.rule=Host(`websocket.${DOMAIN_NAME}`)"
+      # - "traefik.http.routers.websocket.entrypoints=websecure"
+      # - "traefik.http.routers.websocket.tls.certresolver=myresolver"
+      - "traefik.http.routers.websocket.service=websocket-service"
+  postgres:
+    image: "postgres:${MASTER_POSTGRES_VERSION}"
+    hostname: postgres_server
+    environment:
+      POSTGRES_DB: ${MASTER_POSTGRES_DB}
+      POSTGRES_USER: ${MASTER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MASTER_POSTGRES_PASSWORD}
+      POSTGRES_ROOT_PASSWORD: ${MASTER_POSTGRES_ROOT_PASSWORD}
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+networks:
+  default:
+    name: ${NETWORK_NAME}
+    external: true
+volumes:
+  letsencrypt:
+    external: true
+  data:
+    external: true

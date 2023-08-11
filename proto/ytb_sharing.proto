@@ -1,0 +1,106 @@
+syntax = "proto3";
+
+option go_package = "../proto";
+
+package ytb_sharing;
+
+import "google/api/annotations.proto";
+// import "google/protobuf/field_mask.proto";
+// import "google/protobuf/struct.proto";
+
+service BuildoriumService {
+    rpc UserRegister(UserRegisterRequest) returns (UserRegisterResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/register",
+        body: "*"
+      };
+    }
+
+    rpc UserLogin(UserLoginRequest) returns (UserLoginResponse) {
+      option (google.api.http) = {
+        post: "/v1/auth/login",
+        body: "*"
+      };
+    }
+
+    rpc UserInfo(UserInfoRequest) returns (UserInfoResponse) {
+      option (google.api.http) = {
+        get: "/v1/user",
+      };
+    }
+
+    rpc VideoShare(VideoShareRequest) returns (VideoShareResponse) {
+      option (google.api.http) = {
+        post: "/v1/videos/share",
+        body: "*"
+      };
+    }
+
+    rpc VideoList(VideoListRequest) returns (VideoListResponse) {
+      option (google.api.http) = {
+        get: "/v1/videos"
+      };
+    }
+}
+
+message UserRegisterRequest {
+  string email = 1;
+  string password = 2;
+  string confirmPassword = 3;
+}
+
+message UserRegisterResponse {
+  string id = 1;
+  string email = 2;
+  string token = 3;
+}
+
+message UserLoginRequest {
+  string email = 1;
+  string password = 2;
+}
+
+message UserLoginResponse {
+  string token = 1;
+}
+
+message UserInfoRequest {}
+
+message UserInfoResponse {
+  uint64 id = 1;
+  string email = 2;
+}
+
+message User {
+  uint64 id = 1;
+  string email = 2;
+}
+
+message Video {
+  uint64 id = 1;
+  string url = 2;
+  string title = 3;
+  string description = 4;
+  string videoId = 5;
+  User user = 6;
+}
+
+message VideoListRequest {
+}
+message VideoListResponse {
+  repeated Video videos = 1;
+}
+
+message VideoShareRequest {
+  string url = 1;
+  string token = 2;
+}
+
+message VideoShareResponse {
+  uint64 id = 1;
+  string url = 2;
+  string title = 3;
+  string description = 4;
+  string videoId = 5;
+  User user = 6;
+}

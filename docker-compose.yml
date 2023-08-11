@@ -1,0 +1,44 @@
+# local ssl: https://github.com/Heziode/traefik-v2-https-ssl-localhost
+version: '3.8'
+services:
+  postgres:
+    image: "postgres:${MASTER_POSTGRES_VERSION}"
+    hostname: postgres_server
+    environment:
+      POSTGRES_DB: ${MASTER_POSTGRES_DB}
+      POSTGRES_USER: ${MASTER_POSTGRES_USER}
+      POSTGRES_PASSWORD: ${MASTER_POSTGRES_PASSWORD}
+      POSTGRES_ROOT_PASSWORD: ${MASTER_POSTGRES_ROOT_PASSWORD}
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+    networks:
+      - ytb_sharing_network
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: api
+    ports:
+      - '8090:8090'
+      - '8000:8000'
+    volumes:
+      - ./:/app
+    networks:
+      - ytb_sharing_network
+  app:
+    container_name: app
+    build:
+      context: .
+      dockerfile: app.Dockerfile
+    hostname: app
+    ports:
+      - '3000:5173'
+volumes:
+  data:
+networks:
+  ytb_sharing_network:
+    name: ytb-network
+    external: true
