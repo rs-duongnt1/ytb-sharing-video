@@ -29,7 +29,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.app.loadbalancer.server.port=3000"
-      - "traefik.http.routers.app.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.app.rule=Host(`${APP_DOMAIN_NAME}`)"
       # - "traefik.http.routers.app.entrypoints=websecure"
       # - "traefik.http.routers.app.tls.certresolver=myresolver"
   api:
@@ -37,13 +37,13 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.http-service.loadbalancer.server.port=8090"
-      - "traefik.http.routers.api.rule=Host(`api.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.api.rule=Host(`api.${APP_DOMAIN_NAME}`)"
       # - "traefik.http.routers.api.entrypoints=websecure"
       # - "traefik.http.routers.api.tls.certresolver=myresolver"
       - "traefik.http.routers.api.service=http-service"
 
       - "traefik.http.services.websocket-service.loadbalancer.server.port=8000"
-      - "traefik.http.routers.websocket.rule=Host(`websocket.${DOMAIN_NAME}`)"
+      - "traefik.http.routers.websocket.rule=Host(`websocket.${APP_DOMAIN_NAME}`)"
       # - "traefik.http.routers.websocket.entrypoints=websecure"
       # - "traefik.http.routers.websocket.tls.certresolver=myresolver"
       - "traefik.http.routers.websocket.service=websocket-service"

@@ -41,14 +41,13 @@ export const WebSocketProvider: React.FC<Props> = ({ children }) => {
 
       socket.current.onclose = () => {
         const reconnectInterial = setInterval(() => {
-          console.log("Socket is closed, try to reconnecting...");
           connect();
           if (socket.current?.OPEN === 1) {
             console.log("Reconnect successful");
 
             clearInterval(reconnectInterial);
           }
-        }, 1000);
+        }, 3000);
       };
     }
   };

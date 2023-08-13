@@ -14,12 +14,13 @@ services:
     ports:
       - '5432:5432'
     networks:
-      - ytb_sharing_network
+      - ytb_sharing-network
   api:
     container_name: api
     build:
       context: .
       dockerfile: Dockerfile
+      target: build-stage
     hostname: api
     ports:
       - '8090:8090'
@@ -27,18 +28,21 @@ services:
     volumes:
       - ./:/app
     networks:
-      - ytb_sharing_network
+      - ytb_sharing-network
   app:
     container_name: app
     build:
       context: .
       dockerfile: app.Dockerfile
+      target: build-stage
     hostname: app
+    volumes:
+      - ./:/app
     ports:
-      - '3000:5173'
+      - '3000:3000'
 volumes:
   data:
 networks:
-  ytb_sharing_network:
-    name: ytb-network
+  ytb_sharing-network:
+    name: ytb-sharing-network
     external: true

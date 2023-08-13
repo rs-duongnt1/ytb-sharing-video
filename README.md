@@ -32,7 +32,7 @@ Websocket: ws://websocket.rsdn.site/ws
 Clone repository
 
 ```sh
-git clone https://github.com/rs-duongnt1/youtube-video-share.git && cd youtube-video-share
+git clone https://github.com/rs-duongnt1/ytb-sharing-video.git && cd ytb-sharing-video
 ```
 
 Install dependencies
@@ -52,7 +52,7 @@ cp .env.example .env
 Create a docker network & docker volume
 
 ```sh
-docker network create ytb-network --attachable
+docker network create ytb-sharing-network --attachable
 docker volume create data
 ```
 
@@ -69,7 +69,7 @@ After docker start success, navigate to http://localhost:3000/. The app will aut
 App have used `cypress` for unit testing and integration testing. You can access to cypress UI with command and start test:
 
 ```sh
-npx cypress open
+yarn cypress:open
 ```
 
 ## Docker Deployment

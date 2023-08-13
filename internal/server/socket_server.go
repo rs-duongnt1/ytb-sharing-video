@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 
 	pb "github.com/youtube_sharing/youtube_sharing/gen/proto"
@@ -62,7 +63,7 @@ func (s *SocketServer) handleWs(ws *websocket.Conn) {
 
 		if err != nil {
 			fmt.Println(err)
-			websocket.Message.Send(ws, "youtube url not found")
+			websocket.Message.Send(ws, "video not found")
 			continue
 		}
 
@@ -105,5 +106,6 @@ func (s *SocketServer) broadcast(b []byte) {
 
 func (s SocketServer) start() error {
 	http.Handle("/ws", websocket.Handler(s.handleWs))
+	log.Println("starting websocket server addr :8000")
 	return http.ListenAndServe(":8000", nil)
 }
